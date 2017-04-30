@@ -14,7 +14,7 @@ app.get('/', function(request, response) {
 });
 
 app.get('/lmgtfy', function(request, response) {
-  response.send("http://lmgtfy.com/?q=" + request.query.text);
+  response.send("https://www.google.com/#q=" + request.query.text);
   // response.render('pages/index');
 });
 
