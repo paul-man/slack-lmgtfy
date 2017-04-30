@@ -13,8 +13,11 @@ app.get('/', function(request, response) {
   response.render('pages/index');
 });
 
+app.get('/lmgtfy', function(request, response) {
+  response.send("query param is " + request.query.search);
+  // response.render('pages/index');
+});
+
 app.listen(app.get('port'), function() {
   console.log('Node app is running on port', app.get('port'));
 });
-
-
