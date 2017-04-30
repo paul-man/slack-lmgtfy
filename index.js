@@ -14,7 +14,7 @@ app.get('/', function(request, response) {
 });
 
 app.get('/lmgtfy', function(request, response) {
-  response.send("query param is " + request.query.search);
+  response.send("http://lmgtfy.com/?q=" + request.query.text);
   // response.render('pages/index');
 });
 
