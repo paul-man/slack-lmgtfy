@@ -1,5 +1,6 @@
 var express = require('express');
 var app = express();
+var querystring = require("querystring");
 
 app.set('port', (process.env.PORT || 5000));
 
@@ -14,7 +15,8 @@ app.get('/', function(request, response) {
 });
 
 app.get('/lmgtfy', function(request, response) {
-  response.send("https://www.google.com/#q=" + request.query.text);
+    var query = querystring.stringify({q: request.query.text});
+  response.send("https://www.google.com/\#" + query);
   // response.render('pages/index');
 });
 
