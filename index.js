@@ -1,15 +1,15 @@
-var express = require('express');
+var express = require("express");
+var http = require('http');
+var bodyParser = require("body-parser");
+
 var app = express();
-var querystring = require("querystring");
+app.use(bodyParser.json());
 
-// var bodyParser = require('body-parser')
-// app.use(bodyParser.json() );        // to support JSON-encoded bodies
-// app.use(bodyParser.urlencoded({     // to support URL-encoded bodies
-//   extended: true
-// }));
-// app.use(express.urlencoded()); // to support URL-encoded bodies
-
-app.set('port', (process.env.PORT || 5000));
+// Generic error handler used by all endpoints.
+function handleError(res, reason, message, code) {
+  console.log("ERROR: " + reason);
+  res.status(code || 500).json({"error": message});
+}
 
 app.use(express.static(__dirname + '/public'));
 
@@ -27,7 +27,10 @@ app.post('/lmgtfy', function(req, res) {
     console.log("request:");
     // response.render('pages/index');
 });
-
-app.listen(app.get('port'), function() {
-  console.log('Node app is running on port', app.get('port'));
+app.post('/lmgtfy', function(req, res) {
+  console.log("request:");
 });
+
+app.set('port', (process.env.PORT || 5000));
+
+server = http.createServer(app);
