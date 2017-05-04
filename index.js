@@ -2,12 +2,12 @@ var express = require('express');
 var app = express();
 var querystring = require("querystring");
 
-var bodyParser = require('body-parser')
-app.use(bodyParser.json() );        // to support JSON-encoded bodies
-app.use(bodyParser.urlencoded({     // to support URL-encoded bodies
-  extended: true
-}));
-app.use(express.urlencoded()); // to support URL-encoded bodies
+// var bodyParser = require('body-parser')
+// app.use(bodyParser.json() );        // to support JSON-encoded bodies
+// app.use(bodyParser.urlencoded({     // to support URL-encoded bodies
+//   extended: true
+// }));
+// app.use(express.urlencoded()); // to support URL-encoded bodies
 
 app.set('port', (process.env.PORT || 5000));
 
