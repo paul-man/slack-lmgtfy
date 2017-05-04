@@ -21,10 +21,10 @@ app.get('/', function(request, response) {
   response.render('pages/index');
 });
 
-app.post('/lmgtfy', function(request, response) {
-    var query = querystring.stringify({q: request.query.text});
-    response.send("https://www.google.com/\#" + query);
-    console.log("request:", request);
+app.post('/lmgtfy', function(req, res) {
+    // var query = querystring.stringify({q: request.query.text});
+    // response.send("https://www.google.com/\#" + query);
+    console.log("request:", req.body);
     // response.render('pages/index');
 });
 
