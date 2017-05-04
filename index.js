@@ -24,6 +24,7 @@ app.get('/', function(request, response) {
 app.post('/lmgtfy', function(request, response) {
     var query = querystring.stringify({q: request.query.text});
     response.send("https://www.google.com/\#" + query);
+    console.log("request:", request);
     // response.render('pages/index');
 });
 
