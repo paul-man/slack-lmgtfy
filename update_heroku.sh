@@ -1,5 +1,5 @@
-#!/bin/bash
+#!/bin/bash -e
 set -x
-git -a -m "$1"
+git commit -a -m "$1"
 git push origin master
 git push heroku master
