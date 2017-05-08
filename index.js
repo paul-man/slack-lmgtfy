@@ -1,43 +1,24 @@
-
 var express = require('express');
+var bodyParser = require('body-parser');
+
+// Create a new instance of express
 var app = express();
 
-app.set('port', (process.env.PORT || 5000));
+// Tell express to use the body-parser middleware and to not parse extended bodies
+app.use(bodyParser.urlencoded({ extended: false }));
 
-app.use(express.static(__dirname + '/public'));
+// Route that receives a POST request to /sms
+app.post('/lmgtfy', function (req, res) {
+  console.log("Post");
+  res.set('Content-Type', 'text/plain');
+  res.send(`You sent: ${req} to Express`);
+})
 
-app.get('/', function(req, res) {}); // leads to public/index.html
+// Tell our app to listen on port 3000
+app.listen(3000, function (err) {
+  if (err) {
+    throw err;
+  }
 
-var bodyParser = require('body-parser');
-app.use( bodyParser.json({ limit: '1mb' }) );
-app.use( bodyParser.urlencoded({ extended: true, limit: '1mb' }) );
-
-app.set('views', __dirname + '/views');
-
-var use_swig_render = false;
-
-if( use_swig_render ) {
-  var swig = require('swig');
-  app.engine('swig', swig.renderFile);
-  app.set('view engine', 'swig');
-  swig.setDefaults({ cache: false });
-  app.set('view cache', false);
-}
-else {
-  var handlebars = require('express-handlebars');
-  app.engine('handlebars', handlebars());
-  app.set('view engine', 'handlebars');
-}
-
-var apiv1 = require('./routes/apiv1');
-
-app.post('/api/v1', apiv1.post);
-
-app.use ('/api/v1', apiv1);
-
-app.listen(app.get('port'), function() {
-  console.log('Node WebGL app with '
-    + (use_swig_render ? 'swig' : 'handlebars')
-    + ' is running at localhost:'
-    + app.get('port'));
+  console.log('Server started on port 3000');
 });

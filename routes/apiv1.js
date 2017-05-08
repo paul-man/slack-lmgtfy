@@ -6,8 +6,7 @@ router.get ('/', function(req, res) {
 });
 
 router.post ('/', function(req, res) {
-  res.send('API v1 POST: '
-    + JSON.stringify(req.body));
+  res.send('API v1 POST: ');
 });
 
 module.exports = router;
