@@ -1,36 +1,43 @@
-var express = require("express");
-var http = require('http');
-var bodyParser = require("body-parser");
 
+var express = require('express');
 var app = express();
-app.use(bodyParser.json());
-
-// Generic error handler used by all endpoints.
-function handleError(res, reason, message, code) {
-  console.log("ERROR: " + reason);
-  res.status(code || 500).json({"error": message});
-}
-
-app.use(express.static(__dirname + '/public'));
-
-// views is directory for all template files
-app.set('views', __dirname + '/views');
-app.set('view engine', 'ejs');
-
-app.get('/', function(request, response) {
-  response.render('pages/index');
-});
-
-app.post('/lmgtfy', function(req, res) {
-    // var query = querystring.stringify({q: request.query.text});
-    // response.send("https://www.google.com/\#" + query);
-    console.log("request:");
-    // response.render('pages/index');
-});
-app.post('/lmgtfy', function(req, res) {
-  console.log("request:");
-});
 
 app.set('port', (process.env.PORT || 5000));
 
-server = http.createServer(app);
+app.use(express.static(__dirname + '/public'));
+
+app.get('/', function(req, res) {}); // leads to public/index.html
+
+var bodyParser = require('body-parser');
+app.use( bodyParser.json({ limit: '1mb' }) );
+app.use( bodyParser.urlencoded({ extended: true, limit: '1mb' }) );
+
+app.set('views', __dirname + '/views');
+
+var use_swig_render = false;
+
+if( use_swig_render ) {
+  var swig = require('swig');
+  app.engine('swig', swig.renderFile);
+  app.set('view engine', 'swig');
+  swig.setDefaults({ cache: false });
+  app.set('view cache', false);
+}
+else {
+  var handlebars = require('express-handlebars');
+  app.engine('handlebars', handlebars());
+  app.set('view engine', 'handlebars');
+}
+
+var apiv1 = require('./routes/apiv1');
+
+app.post('/api/v1', apiv1.post);
+
+app.use ('/api/v1', apiv1);
+
+app.listen(app.get('port'), function() {
+  console.log('Node WebGL app with '
+    + (use_swig_render ? 'swig' : 'handlebars')
+    + ' is running at localhost:'
+    + app.get('port'));
+});
