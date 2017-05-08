@@ -16,7 +16,7 @@ app.post('/lmgtfy', function (req, res) {
     res.set('Content-Type', 'text/plain');
     console.log("Post");
 
-    var jsonObj = req[0];
+    var jsonObj = req;
 
     console.log(Object.keys(jsonObj));
     res.send(Object.keys(jsonObj));
