@@ -12,7 +12,7 @@ app.use(bodyParser.urlencoded({ extended: false }));
 
 // Route that receives a POST request to /sms
 app.post('/lmgtfy', function (req, res) {
-    var obj = req.client.body;
+    var obj = req.client;
     res.set('Content-Type', 'text/plain');
     console.log("Post");
     console.log(obj);
@@ -20,10 +20,8 @@ app.post('/lmgtfy', function (req, res) {
     res.send(util.inspect(obj, {depth: null}));
 
 
-    // var jsonObj = req;
-    //
     // console.log(Object.keys(jsonObj));
-    // res.send(Object.keys(jsonObj));
+    res.send(Object.keys(obj));
 });
 
 // Tell our app to listen on port 3000
