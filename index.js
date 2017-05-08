@@ -4,6 +4,8 @@ var bodyParser = require('body-parser');
 // Create a new instance of express
 var app = express();
 
+var port = process.env.PORT || 8080;
+
 // Tell express to use the body-parser middleware and to not parse extended bodies
 app.use(bodyParser.urlencoded({ extended: false }));
 
@@ -15,10 +17,10 @@ app.post('/lmgtfy', function (req, res) {
 })
 
 // Tell our app to listen on port 3000
-app.listen(3000, function (err) {
+app.listen(port, function (err) {
   if (err) {
     throw err;
   }
 
-  console.log('Server started on port 3000');
+  console.log('Server started on port', port);
 });
