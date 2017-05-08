@@ -12,7 +12,7 @@ app.use(bodyParser.urlencoded({ extended: false }));
 
 // Route that receives a POST request to /sms
 app.post('/lmgtfy', function (req, res) {
-    var obj = req.client._httpMessage;
+    var obj = req.client._httpMessage._server;
     res.set('Content-Type', 'text/plain');
     console.log("Post");
     console.log(obj);
