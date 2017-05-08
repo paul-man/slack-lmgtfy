@@ -17,10 +17,10 @@ app.post('/lmgtfy', function (req, res) {
     console.log("Post");
     console.log(obj);
     console.log(util.inspect(obj, {depth: null}));
-    res.send(util.inspect(obj, {depth: null}));
+    // res.send(util.inspect(obj, {depth: null}));
     //
-    // var keys = Object.keys(obj);
-    // console.log('obj contains ' + keys.length + ' keys: '+  keys);
+    var keys = Object.keys(obj);
+    console.log('obj contains ' + keys.length + ' keys: '+  keys);
 });
 
 // Tell our app to listen on port 3000
