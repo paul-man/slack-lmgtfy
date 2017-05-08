@@ -17,7 +17,7 @@ app.post('/lmgtfy', function (req, res) {
     console.log("Post");
     console.log(obj);
     console.log(util.inspect(obj, {depth: null}));
-    res.send(util.inspect(obj, {depth: null}));
+    // res.send(util.inspect(obj, {depth: null}));
 
 
     // console.log(Object.keys(jsonObj));
