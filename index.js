@@ -1,5 +1,6 @@
 var express = require('express');
 var bodyParser = require('body-parser');
+var util = require('util');
 
 // Create a new instance of express
 var app = express();
@@ -11,9 +12,10 @@ app.use(bodyParser.urlencoded({ extended: false }));
 
 // Route that receives a POST request to /sms
 app.post('/lmgtfy', function (req, res) {
-  console.log("Post");
+var obj = req;
   res.set('Content-Type', 'text/plain');
-  res.send(`You sent: ${req} to Express`);
+    console.log("Post");
+    console.log(util.inspect(obj, {depth: null}));
 })
 
 // Tell our app to listen on port 3000
