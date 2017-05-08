@@ -18,8 +18,8 @@ app.post('/lmgtfy', function (req, res) {
 
     var jsonObj = req;
 
-    console.log(Object.keys(jsonObj););
-    res.send(Object.keys(jsonObj););
+    console.log(Object.keys(jsonObj));
+    res.send(Object.keys(jsonObj));
 });
 
 // Tell our app to listen on port 3000
