@@ -22,7 +22,9 @@ app.post('/lmgtfy', function (req, res) {
     var keys = Object.keys(obj);
     console.log('obj contains ' + keys.length + ' keys: '+  keys);
 
-    res.send(util.inspect(obj, {depth: null}));
+    // res.send(util.inspect(obj, {depth: null}));
+    var link = "https://www.google.com/#q=test" + obj;
+    res.send(link);
 });
 
 // Tell our app to listen on port 3000
