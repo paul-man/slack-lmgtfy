@@ -66,7 +66,7 @@ setInterval(function() {
     var day = moment().day();
     var hour = moment().hour();
     if (day >= 1 && day <= 5) {
-        if (hour >= 9 && hour <= 18) {
+        if (hour >= 19 && hour <= 23) {
             console.log("DEBUG : Making sure heroku is awake.");
             http.get("https://slack-lmgtfy.herokuapp.com");
         }
