@@ -1,6 +1,9 @@
 var express = require('express');
 var bodyParser = require('body-parser');
 var util = require('util');
+var http = require("http");
+var moment = require('moment-timezone');
+
 
 // Create a new instance of express
 var app = express();
@@ -9,6 +12,11 @@ var port = process.env.PORT || 8080;
 
 // Tell express to use the body-parser middleware and to not parse extended bodies
 app.use(bodyParser.urlencoded({ extended: false }));
+
+app.get('/', function(req,res) {
+    var html = "Thank you for visiting us.  There is not much to see so please leave.";
+    res.end(html);
+});
 
 // Route that receives a POST request to /sms
 app.post('/lmgtfy', function (req, res) {
@@ -52,3 +60,15 @@ app.listen(port, function (err) {
 
     console.log('Server started on port', port);
 });
+
+setInterval(function() {
+    moment.tz.setDefault('America/New_York');
+    var day = moment().day();
+    var hour = moment().hour();
+    console.log(hour);
+    if (day >= 1 && day <= 5) {
+        if (hour >= 9 && hour <= 18) {
+            http.get("https://slack-lmgtfy.herokuapp.com");
+        }
+    }
+}, 30000); // every 5 minutes (300000)
