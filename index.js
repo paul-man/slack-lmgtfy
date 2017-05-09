@@ -23,7 +23,7 @@ app.post('/lmgtfy', function (req, res) {
     console.log('obj contains ' + keys.length + ' keys: '+  keys);
 
     // res.send(util.inspect(obj, {depth: null}));
-    var link = "https://www.google.com/#q=test" + obj;
+    var link = "https://www.google.com/#q=" + obj;
     res.send(link);
 });
 
