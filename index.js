@@ -40,7 +40,7 @@ app.post('/lmgtfy', function (req, res) {
         text: "Here's your link, lazy bastard!",
         attachments: attachments_arr
     });
-    response.end(json);
+    res.end(json);
 });
 
 // Tell our app to listen on port 3000
