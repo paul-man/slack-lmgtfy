@@ -65,7 +65,6 @@ setInterval(function() {
     moment.tz.setDefault('America/New_York');
     var day = moment().day();
     var hour = moment().hour();
-    console.log(hour);
     if (day >= 1 && day <= 5) {
         if (hour >= 9 && hour <= 18) {
             http.get("https://slack-lmgtfy.herokuapp.com");
