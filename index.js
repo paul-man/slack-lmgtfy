@@ -1,7 +1,7 @@
 var express = require('express');
 var bodyParser = require('body-parser');
 var util = require('util');
-var http = require("http");
+var https = require("https");
 var moment = require('moment-timezone');
 
 
@@ -68,7 +68,7 @@ setInterval(function() {
     if (day >= 1 && day <= 5) {
         if (hour >= 19 && hour <= 23) {
             console.log("DEBUG : Making sure heroku is awake.");
-            http.get("https://slack-lmgtfy.herokuapp.com");
+            https.get("https://slack-lmgtfy.herokuapp.com");
         }
     }
-}, 30000); // every 5 minutes (300000)
+}, 3000); // every 5 minutes (300000)
