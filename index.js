@@ -38,7 +38,7 @@ app.post('/lmgtfy', function (req, res) {
     // var otherObject = { item1: "item1val", item2: "item2val" };
     var json = JSON.stringify({
         response_type: "in_channel",
-        text: "Here's your link, lazy bastard!",
+        text: "Here's your link, lazy!",
         attachments: attachments_arr
     });
     res.end(json);
