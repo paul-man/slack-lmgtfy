@@ -12,8 +12,8 @@ app.use(bodyParser.urlencoded({ extended: false }));
 
 // Route that receives a POST request to /sms
 app.post('/lmgtfy', function (req, res) {
-    var obj = req.client._httpMessage.req.body.text;
-    res.set('Content-Type', 'text/plain');
+    var obj = req.client._httpMessage.req.body;
+    var text = obj.text;
     console.log("Post");
     console.log(obj);
     console.log(util.inspect(obj, {depth: null}));
@@ -23,7 +23,9 @@ app.post('/lmgtfy', function (req, res) {
     console.log('obj contains ' + keys.length + ' keys: '+  keys);
 
     // res.send(util.inspect(obj, {depth: null}));
-    var link = "https://www.google.com/#q=" + obj;
+    var link = "https://www.google.com/#q=" + encodeURIComponent(text);
+
+    res.set('Content-Type', 'text/plain');
     res.send(link);
 });
 
