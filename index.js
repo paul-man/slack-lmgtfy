@@ -3,6 +3,9 @@ var bodyParser = require('body-parser');
 var util = require('util');
 var https = require("https");
 var moment = require('moment-timezone');
+var config = require('./config'); // get our config file
+
+var sloken = config.sloken;
 
 // Create a new instance of express
 var app = express();
@@ -20,11 +23,10 @@ app.get('/', function(req,res) {
 // Route that receives a POST request to /sms
 app.post('/lmgtfy', function (req, res) {
     var obj = req.client._httpMessage.req.body;
+    var token = obj.token;
     var text = obj.text;
     console.log("Post");
     console.log(obj);
-    // res.send(util.inspect(obj, {depth: null}));
-
     // {
     //     "text": "It's 80 degrees right now.",
     //     "attachments": [
@@ -33,7 +35,6 @@ app.post('/lmgtfy', function (req, res) {
     //         }
     //     ]
     // }
-
     var link = "https://www.google.com/#q=" + encodeURIComponent(text);
 
     res.writeHead(200, {"Content-Type": "application/json"});
@@ -51,8 +52,6 @@ app.post('/youtube', function (req, res) {
     var text = obj.text;
     console.log("Post");
     console.log(obj);
-    // res.send(util.inspect(obj, {depth: null}));
-
     // {
     //     "text": "It's 80 degrees right now.",
     //     "attachments": [
@@ -61,7 +60,6 @@ app.post('/youtube', function (req, res) {
     //         }
     //     ]
     // }
-
     var link = "https://www.youtube.com/results?search_query=" + encodeURIComponent(text);
 
     res.writeHead(200, {"Content-Type": "application/json"});
