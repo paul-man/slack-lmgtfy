@@ -4,7 +4,6 @@ var util = require('util');
 var https = require("https");
 var moment = require('moment-timezone');
 
-
 // Create a new instance of express
 var app = express();
 
@@ -24,11 +23,7 @@ app.post('/lmgtfy', function (req, res) {
     var text = obj.text;
     console.log("Post");
     console.log(obj);
-    console.log(util.inspect(obj, {depth: null}));
     // res.send(util.inspect(obj, {depth: null}));
-    //
-    var keys = Object.keys(obj);
-    console.log('obj contains ' + keys.length + ' keys: '+  keys);
 
     // {
     //     "text": "It's 80 degrees right now.",
@@ -38,12 +33,11 @@ app.post('/lmgtfy', function (req, res) {
     //         }
     //     ]
     // }
-    // res.send(util.inspect(obj, {depth: null}));
+
     var link = "https://www.google.com/#q=" + encodeURIComponent(text);
 
     res.writeHead(200, {"Content-Type": "application/json"});
     var attachments_arr = [{text: link}];
-    // var otherObject = { item1: "item1val", item2: "item2val" };
     var json = JSON.stringify({
         response_type: "in_channel",
         text: "Here's your link, lazy!",
@@ -57,7 +51,6 @@ app.listen(port, function (err) {
     if (err) {
         throw err;
     }
-
     console.log('Server started on port', port);
 });
 
@@ -67,7 +60,7 @@ setInterval(function() {
     var hour = moment().hour();
     var minute = moment().minutes();
     if (day >= 1 && day <= 5) {
-        if (hour >= 18 && (hour <= 20 && minute <= 8)) {
+        if ((hour >= 23 && minute <=40 )  && (hour <= 18 && minute <= 0)) {
             console.log(moment().format(), "DEBUG : Making sure heroku is awake.");
             https.get("https://slack-lmgtfy.herokuapp.com");
         }
