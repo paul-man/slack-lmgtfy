@@ -65,8 +65,9 @@ setInterval(function() {
     moment.tz.setDefault('America/New_York');
     var day = moment().day();
     var hour = moment().hour();
+    var minute = moment().minutes();
     if (day >= 1 && day <= 5) {
-        if (hour >= 18 && hour <= 19) {
+        if (hour >= 18 && (hour <= 20 && minute <= 15)) {
             console.log(moment().format(), "DEBUG : Making sure heroku is awake.");
             https.get("https://slack-lmgtfy.herokuapp.com");
         }
