@@ -4,9 +4,7 @@ var util = require('util');
 var https = require("https");
 var moment = require('moment-timezone');
 var config = require('./config'); // get our config file
-var RtmClient = require('@slack/client').RtmClient;
 
-var bot_token = config.slack_bot_token || '';
 
 var morning = moment("08:30:00", 'HH:mm A');
 var night = moment("24:00:00", 'HH:mm A');
@@ -70,13 +68,21 @@ app.listen(port, function (err) {
     console.log('Server started on port', port);
 });
 
-var rtm = new RtmClient(bot_token);
-rtm.start();
+// var RtmClient = require('@slack/client').RtmClient;
+// var CLIENT_EVENTS = require('@slack/client').CLIENT_EVENTS;
+//
+// var bot_token = config.slack_bot_token || '';
+//
+// var rtm = new RtmClient(bot_token);
+//
+// // The client will emit an RTM.AUTHENTICATED event on successful connection, with the `rtm.start` payload if you want to cache it
+// rtm.on(CLIENT_EVENTS.RTM.AUTHENTICATED, function (rtmStartData) {
+//   console.log(`Logged in as ${rtmStartData.self.name} of team ${rtmStartData.team.name}, but not yet connected to a channel`);
+// });
+//
+// rtm.start();
 
-rtm.on(RTM_EVENTS.MESSAGE, function handleRtmMessage(message) {
-  var channel = "#general"; //could also be a channel, group, DM, or user ID (C1234), or a username (@don)
-  rtm.sendMessage("Hello <@" + message.user + ">!", message.channel);
-});
+
 
 setInterval(function() {
     var now = moment.tz.setDefault('America/New_York');
