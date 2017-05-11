@@ -29,10 +29,10 @@ app.get('/', function (req, res) {
 });
 
 app.post('/lmgtfy', function (req, res) {
+    console.log("POST ::", moment().format());
     var obj = req.client._httpMessage.req.body;
     var token = obj.token;
     var text = obj.text;
-    console.log("POST ::", moment().format());
     console.log(obj);
     var link = "https://www.google.com/#q=" + encodeURIComponent(text);
 
@@ -51,9 +51,9 @@ app.post('/lmgtfy', function (req, res) {
 });
 
 app.post('/youtube', function (req, res) {
+    console.log("POST ::", moment().format());
     var obj = req.client._httpMessage.req.body;
     var text = obj.text;
-    console.log("POST ::", moment().format());
     console.log(obj);
     var link = "https://www.youtube.com/results?search_query=" + encodeURIComponent(text);
 
@@ -71,10 +71,13 @@ app.post('/youtube', function (req, res) {
     res.end(json);
 });
 
+app.get('/test', function (req, res) {
+    console.log("GET ::", moment().format());
+});
 app.post('/test', function (req, res) {
+    console.log("POST ::", moment().format());
     var obj = req.client._httpMessage.req.body;
     var text = obj.text;
-    console.log("POST ::", moment().format());
     console.log(obj);
     var link = "https://www.youtube.com/results?search_query=" + encodeURIComponent(text);
 
