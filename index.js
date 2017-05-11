@@ -4,7 +4,7 @@ var util = require('util');
 var https = require("https");
 var moment = require('moment-timezone');
 var config = require('./config'); // get our config file
-
+moment.tz.setDefault('America/New_York');
 
 var morning = moment("08:30:00", 'HH:mm A');
 var night = moment("24:00:00", 'HH:mm A');
@@ -85,7 +85,7 @@ app.listen(port, function (err) {
 
 
 setInterval(function() {
-    var now = moment.tz.setDefault('America/New_York');
+    var now = moment();
     var day = now().day();
     if (day >= 1 && day <= 5) {
         if (now().isAfter(morning) && now().isBefore(night)) {
