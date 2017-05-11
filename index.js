@@ -71,15 +71,12 @@ app.post('/youtube', function (req, res) {
     res.end(json);
 });
 
-app.get('/test', function (req, res) {
-    console.log("GET ::", moment().format());
-});
 app.post('/test', function (req, res) {
     console.log("POST ::", moment().format());
     var obj = req.client._httpMessage.req.body;
     var text = obj.text;
     console.log(obj);
-    var link = "https://www.youtube.com/results?search_query=" + encodeURIComponent(text);
+    var link = "https://www.youtube.com/watch?v=X-6V0Wg0aOI";
 
     res.writeHead(200, {
         "Content-Type": "application/json"
@@ -88,8 +85,8 @@ app.post('/test', function (req, res) {
         text: link
     }];
     var json = JSON.stringify({
-        response_type: "in_channel",
-        text: "Here's your link, lazy!",
+        response_type: "ephemeral",
+        text: "Why would you go and do a thing like that?",
         attachments: attachments_arr
     });
     res.end(json);
