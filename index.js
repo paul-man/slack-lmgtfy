@@ -71,6 +71,27 @@ app.post('/youtube', function (req, res) {
     res.end(json);
 });
 
+app.post('/test', function (req, res) {
+    var obj = req.client._httpMessage.req.body;
+    var text = obj.text;
+    console.log("POST ::", moment().format());
+    console.log(obj);
+    var link = "https://www.youtube.com/results?search_query=" + encodeURIComponent(text);
+
+    res.writeHead(200, {
+        "Content-Type": "application/json"
+    });
+    var attachments_arr = [{
+        text: link
+    }];
+    var json = JSON.stringify({
+        response_type: "in_channel",
+        text: "Here's your link, lazy!",
+        attachments: attachments_arr
+    });
+    res.end(json);
+});
+
 app.listen(port, function (err) {
     if (err) {
         throw err;
