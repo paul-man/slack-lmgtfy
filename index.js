@@ -4,6 +4,7 @@ var util = require('util');
 var https = require("https");
 var moment = require('moment-timezone');
 var config = require('./config'); // get config file
+var request = require('request');
 
 moment.tz.setDefault('America/New_York');
 
@@ -93,6 +94,51 @@ app.post('/stackoverflow', function (req, res) {
         attachments: attachments_arr
     });
     res.end(json);
+});
+
+app.post('/stock', function (req, res) {
+    console.log("POST ::", moment().format());
+    var obj = req.client._httpMessage.req.body;
+    var ticker = obj.text;
+    console.log(obj);
+    var url = "http://finance.google.com/finance";
+
+
+    if (!req.params.id) {
+        res.status(500);
+        res.send({
+            "Error": "Looks like you are not senging the product id to get the product details."
+        });
+        console.log("Looks like you are not senging the product id to get the product detsails.");
+    }
+    request.get({
+            url: "http://finance.google.com/finance/info?client=ig&q=NASDAQ%3AGOOG"
+        },
+        function (error, response, body) {
+            if (!error && response.statusCode == 200) {
+                res.json(body);
+            }
+        });
+
+    res.writeHead(200, {
+        "Content-Type": "application/json"
+    });
+    var attachments_arr = [{
+        text: link
+    }];
+    var json = JSON.stringify({
+        response_type: "ephemeral",
+        text: "Why would you go and do a thing like that?",
+        attachments: attachments_arr
+    });
+    res.end(json);
+});
+
+app.listen(port, function (err) {
+    if (err) {
+        throw err;
+    }
+    console.log('Server started on port', port);
 });
 
 app.post('/test', function (req, res) {
