@@ -145,7 +145,7 @@ app.post('/stock', function (req, res) {
                 }];
                 var json = JSON.stringify({
                     response_type: "in_channel",
-                    text: ticker_val + " " + traded + " on " + exchange + " @ " + trade_time,
+                    text: ticker_val + " traded on " + exchange + " @ " + trade_time,
                     attachments: attachments_arr
                 });
                 res.end(json);
