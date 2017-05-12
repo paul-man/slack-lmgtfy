@@ -150,7 +150,19 @@ app.post('/stock', function (req, res) {
                     attachments: attachments_arr
                 });
                 res.end(json);
+            } else {
+                var attachments_arr = [{
+                    text: "https://www.youtube.com/watch?v=OGp9P6QvMjY",
+                    color: red
+                }];
+                var json = JSON.stringify({
+                    response_type: "in_channel",
+                    text: "No such ticker.  See link for explanation.",
+                    attachments: attachments_arr
+                });
+                res.end(json);
             }
+
         });
 });
 
