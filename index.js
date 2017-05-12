@@ -103,7 +103,7 @@ app.post('/stock', function (req, res) {
     console.log("POST ::", moment().format());
     var obj = req.client._httpMessage.req.body;
     var ticker = obj.text;
-    console.log(obj);
+    // console.log(obj);
     var price;
     var change;
     var change_percent;
@@ -114,10 +114,9 @@ app.post('/stock', function (req, res) {
     res.writeHead(200, {
         "Content-Type": "application/json"
     });
-    var url = "http://finance.google.com/finance";
 
     request.get({
-            url: "http://finance.google.com/finance/info?client=ig&q=NASDAQ%3AGOOG"
+            url: "http://finance.google.com/finance/info?client=ig&q=%3A${ticker}"
         },
         function (error, response, body) {
             if (!error && response.statusCode == 200) {
@@ -132,25 +131,26 @@ app.post('/stock', function (req, res) {
                 ticker_val = body.t;
                 // console.log(price, change, change_percent, exchange, trade_time);
                 // res.end(JSON.stringify(body));
+                console.log(price, change);
+                console.log(price, change);
+                if (change.charAt(0) == '+') {
+                    color_val = green;
+                } else {
+                    color_val = red;
+                }
+
+                var attachments_arr = [{
+                    text: "${price} ${change} ${change_percent}%",
+                    color: color_val
+                }];
+                var json = JSON.stringify({
+                    response_type: "in_channel",
+                    text: "${ticker_val} traded on ${exchange} @ ${trade_time}",
+                    attachments: attachments_arr
+                });
+                res.end(json);
             }
         });
-
-    if (change.charAt(0) == '+') {
-        color_val = green;
-    } else {
-        color_val = red;
-    }
-
-    var attachments_arr = [{
-        text: "${price} ${change} ${change_percent}%",
-        color: color_val
-    }];
-    var json = JSON.stringify({
-        response_type: "in_channel",
-        text: "${ticker_val} traded on ${exchange} @ ${trade_time}",
-        attachments: attachments_arr
-    });
-    res.end(json);
 });
 
 app.post('/test', function (req, res) {
