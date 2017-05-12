@@ -6,6 +6,9 @@ var moment = require('moment-timezone');
 var config = require('./config'); // get config file
 var request = require('request');
 
+var red = "#FF0000";
+var green = "#00FF00";
+
 moment.tz.setDefault('America/New_York');
 
 var morning = moment("08:30:00", 'HH:mm A');
@@ -101,44 +104,53 @@ app.post('/stock', function (req, res) {
     var obj = req.client._httpMessage.req.body;
     var ticker = obj.text;
     console.log(obj);
+    var price;
+    var change;
+    var change_percent;
+    var exchange;
+    var trade_time;
+    var color_val;
+    var ticker_val;
+    res.writeHead(200, {
+        "Content-Type": "application/json"
+    });
     var url = "http://finance.google.com/finance";
 
-
-    if (!req.params.id) {
-        res.status(500);
-        res.send({
-            "Error": "Looks like you are not senging the product id to get the product details."
-        });
-        console.log("Looks like you are not senging the product id to get the product detsails.");
-    }
     request.get({
             url: "http://finance.google.com/finance/info?client=ig&q=NASDAQ%3AGOOG"
         },
         function (error, response, body) {
             if (!error && response.statusCode == 200) {
-                res.json(body);
+                body = body.replace(/\//g, "");
+                body = JSON.parse(body)[0];
+                console.log(body);
+                price = body.l;
+                change = body.c;
+                change_percent = body.cp;
+                exchange = body.e;
+                trade_time = body.lt;
+                ticker_val = body.t;
+                // console.log(price, change, change_percent, exchange, trade_time);
+                // res.end(JSON.stringify(body));
             }
         });
 
-    res.writeHead(200, {
-        "Content-Type": "application/json"
-    });
+    if (change.charAt(0) == '+') {
+        color_val = green;
+    } else {
+        color_val = red;
+    }
+
     var attachments_arr = [{
-        text: link
+        text: "${price} ${change} ${change_percent}%",
+        color: color_val
     }];
     var json = JSON.stringify({
-        response_type: "ephemeral",
-        text: "Why would you go and do a thing like that?",
+        response_type: "in_channel",
+        text: "${ticker_val} traded on ${exchange} @ ${trade_time}",
         attachments: attachments_arr
     });
     res.end(json);
-});
-
-app.listen(port, function (err) {
-    if (err) {
-        throw err;
-    }
-    console.log('Server started on port', port);
 });
 
 app.post('/test', function (req, res) {
