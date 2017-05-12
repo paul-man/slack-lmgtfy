@@ -28,7 +28,7 @@ app.get('/', function (req, res) {
     res.end(html);
 });
 
-app.post('/lmgtfy', function (req, res) {
+app.post('/google', function (req, res) {
     console.log("POST ::", moment().format());
     var obj = req.client._httpMessage.req.body;
     var token = obj.token;
@@ -40,7 +40,8 @@ app.post('/lmgtfy', function (req, res) {
         "Content-Type": "application/json"
     });
     var attachments_arr = [{
-        text: link
+        text: link,
+        color: "#34A853"
     }];
     var json = JSON.stringify({
         response_type: "in_channel",
@@ -61,7 +62,8 @@ app.post('/youtube', function (req, res) {
         "Content-Type": "application/json"
     });
     var attachments_arr = [{
-        text: link
+        text: link,
+        color: "#CC181E"
     }];
     var json = JSON.stringify({
         response_type: "in_channel",
@@ -76,13 +78,14 @@ app.post('/stackoverflow', function (req, res) {
     var obj = req.client._httpMessage.req.body;
     var text = obj.text;
     console.log(obj);
-    var link = "https://stackoverflow.com/search?q=" + encodeURIComponent(text);
+    var link = "https://stackoverflow.com/search?tab=votes&q=" + encodeURIComponent(text);
 
     res.writeHead(200, {
         "Content-Type": "application/json"
     });
     var attachments_arr = [{
-        text: link
+        text: link,
+        color: "#F48024"
     }];
     var json = JSON.stringify({
         response_type: "in_channel",
