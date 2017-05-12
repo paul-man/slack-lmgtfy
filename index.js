@@ -116,7 +116,7 @@ app.post('/stock', function (req, res) {
     });
 
     request.get({
-            url: "http://finance.google.com/finance/info?client=ig&q=%3A${ticker}"
+            url: "http://finance.google.com/finance/info?client=ig&q=%3A" + ticker
         },
         function (error, response, body) {
             if (!error && response.statusCode == 200) {
@@ -140,12 +140,12 @@ app.post('/stock', function (req, res) {
                 }
 
                 var attachments_arr = [{
-                    text: "${price} ${change} ${change_percent}%",
+                    text: price + " " + change + " " + change_percent + "%",
                     color: color_val
                 }];
                 var json = JSON.stringify({
                     response_type: "in_channel",
-                    text: "${ticker_val} traded on ${exchange} @ ${trade_time}",
+                    text: ticker_val + " " + traded + " on " + exchange + " @ " + trade_time,
                     attachments: attachments_arr
                 });
                 res.end(json);
