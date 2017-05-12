@@ -140,10 +140,10 @@ app.post('/stock', function (req, res) {
                 }
 
                 var attachments_arr = [{
-                    text: price + " " + change + " (" + change_percent + "%)",
+                    text: "$" + price + " " + change + " (" + change_percent + "%)",
                     color: color_val
                 }];
-                var ticker_link = "<https://www.google.com/#q=" + ticker_val + "|$" + ticker_val + ">";
+                var ticker_link = "<https://www.google.com/#q=" + ticker_val + "|" + ticker_val + ">";
                 var json = JSON.stringify({
                     response_type: "in_channel",
                     text: ticker_link + " traded on " + exchange + " @ " + trade_time,
