@@ -5,19 +5,15 @@ var https = require("https");
 var moment = require('moment-timezone');
 var config = require('./config'); // get config file
 var request = require('request');
+var app = express();
 
 var red = "#FF0000";
 var green = "#00FF00";
-
-moment.tz.setDefault('America/New_York');
-
-var morning = moment("08:30:00", 'HH:mm A');
-var night = moment("24:00:00", 'HH:mm A');
-
 var sloken = config.sloken;
 
-// Create a new instance of express
-var app = express();
+moment.tz.setDefault('America/New_York');
+var morning = moment("08:30:00", 'HH:mm A');
+var night = moment("24:00:00", 'HH:mm A');
 
 var port = process.env.PORT || 8080;
 
@@ -25,6 +21,16 @@ var port = process.env.PORT || 8080;
 app.use(bodyParser.urlencoded({
     extended: false
 }));
+
+app.all('*', function(req, res, next) {
+    try {
+        req = req.client._httpMessage.req;
+        console.log(moment().format() + '\n' + req.body);
+    } catch(e) {
+        console.log("TODO: determine request type");
+    }
+    next();
+});
 
 app.get('/', function (req, res) {
     var html = "Thank you for visiting us.  There is not much to see so please leave.";
@@ -34,7 +40,8 @@ app.get('/', function (req, res) {
 
 app.post('/google', function (req, res) {
     console.log("POST ::", moment().format());
-    var obj = req.client._httpMessage.req.body;
+    auth(req, res);
+    var obj = req.body;
     var token = obj.token;
     var text = obj.text;
     console.log(obj);
@@ -57,7 +64,8 @@ app.post('/google', function (req, res) {
 
 app.post('/youtube', function (req, res) {
     console.log("POST ::", moment().format());
-    var obj = req.client._httpMessage.req.body;
+    auth(req, res);
+    var obj = req.body;
     var text = obj.text;
     console.log(obj);
     var link = "https://www.youtube.com/results?search_query=" + encodeURIComponent(text);
@@ -79,7 +87,8 @@ app.post('/youtube', function (req, res) {
 
 app.post('/stackoverflow', function (req, res) {
     console.log("POST ::", moment().format());
-    var obj = req.client._httpMessage.req.body;
+    auth(req, res);
+    var obj = req.body;
     var text = obj.text;
     console.log(obj);
     var link = "https://stackoverflow.com/search?tab=votes&q=" + encodeURIComponent(text);
@@ -101,38 +110,27 @@ app.post('/stackoverflow', function (req, res) {
 
 app.post('/stock', function (req, res) {
     console.log("POST ::", moment().format());
-    var obj = req.client._httpMessage.req.body;
+    auth(req, res);
+    var obj = req.body;
     var ticker = obj.text;
-    // console.log(obj);
-    var price;
-    var change;
-    var change_percent;
-    var exchange;
-    var trade_time;
-    var color_val;
-    var ticker_val;
     res.writeHead(200, {
         "Content-Type": "application/json"
     });
 
-    request.get({
-            url: "http://finance.google.com/finance/info?client=ig&q=%3A" + ticker
-        },
+    request.get(
+        { url: "http://finance.google.com/finance/info?client=ig&q=%3A" + ticker },
         function (error, response, body) {
             if (!error && response.statusCode == 200) {
                 body = body.replace(/\//g, "");
                 body = JSON.parse(body)[0];
                 console.log(body);
-                price = body.l;
-                change = body.c;
-                change_percent = body.cp;
-                exchange = body.e;
-                trade_time = body.lt;
+                var price = body.l;
+                var change = body.c;
+                var change_percent = body.cp;
+                var exchange = body.e;
+                var trade_time = body.lt;
+                var 20.
                 ticker_val = body.t;
-                // console.log(price, change, change_percent, exchange, trade_time);
-                // res.end(JSON.stringify(body));
-                console.log(price, change);
-                console.log(price, change);
                 if (change.charAt(0) == '+') {
                     color_val = green;
                 } else {
@@ -162,13 +160,14 @@ app.post('/stock', function (req, res) {
                 });
                 res.end(json);
             }
-
-        });
+        }
+    );
 });
 
 app.post('/test', function (req, res) {
     console.log("POST ::", moment().format());
-    var obj = req.client._httpMessage.req.body;
+    auth(req, res);
+    var obj = req.body;
     var text = obj.text;
     console.log(obj);
     var link = "https://www.youtube.com/watch?v=X-6V0Wg0aOI";
@@ -194,6 +193,15 @@ app.listen(port, function (err) {
     console.log('Server started on port', port);
 });
 
+function auth(req, res) {
+    if (req.body.token != sloken) {
+        res.writeHead(403, {
+            "Content-Type": "text/plain"
+        });
+        res.end("Invalid request")
+    }
+}
+
 setInterval(function () {
     var now = moment();
     var day = now.day();
@@ -204,14 +212,3 @@ setInterval(function () {
         }
     }
 }, 1500000); // every 25 minutes
-
-
-// Response format
-// {
-//     "text": "It's 80 degrees right now.",
-//     "attachments": [
-//         {
-//             "text":"Partly cloudy today and tomorrow"
-//         }
-//     ]
-// }
