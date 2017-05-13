@@ -129,7 +129,6 @@ app.post('/stock', function (req, res) {
                 var change_percent = body.cp;
                 var exchange = body.e;
                 var trade_time = body.lt;
-                var 20.
                 ticker_val = body.t;
                 if (change.charAt(0) == '+') {
                     color_val = green;
