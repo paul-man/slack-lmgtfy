@@ -5,6 +5,7 @@ var https = require("https");
 var moment = require('moment-timezone');
 var config = require('./config'); // get config file
 var request = require('request');
+var googleStocks = require('google-stocks');
 
 var red = "#FF0000";
 var green = "#00FF00";
@@ -115,55 +116,53 @@ app.post('/stock', function (req, res) {
         "Content-Type": "application/json"
     });
 
-    request.get({
-            url: "http://finance.google.com/finance/info?client=ig&q=%3A" + ticker
-        },
-        function (error, response, body) {
-            if (!error && response.statusCode == 200) {
-                body = body.replace(/\//g, "");
-                body = JSON.parse(body)[0];
-                console.log(body);
-                price = body.l;
-                change = body.c;
-                change_percent = body.cp;
-                exchange = body.e;
-                trade_time = body.lt;
-                ticker_val = body.t;
-                // console.log(price, change, change_percent, exchange, trade_time);
-                // res.end(JSON.stringify(body));
-                console.log(price, change);
-                console.log(price, change);
-                if (change.charAt(0) == '+') {
-                    color_val = green;
-                } else {
-                    color_val = red;
-                }
 
-                var attachments_arr = [{
-                    text: "$" + price + " " + change + " (" + change_percent + "%)",
-                    color: color_val
-                }];
-                var ticker_link = "<https://www.google.com/finance?q=" + ticker_val + "|" + ticker_val + ">";
-                var json = JSON.stringify({
-                    response_type: "in_channel",
-                    text: ticker_link + " traded on " + exchange + " @ " + trade_time,
-                    attachments: attachments_arr
-                });
-                res.end(json);
+    googleStocks([ticker], function (error, data) {
+        if (!error && response.statusCode == 200) {
+            data = data.replace(/\//g, "");
+            data = JSON.parse(data)[0];
+            console.log(data);
+            price = data.l;
+            change = data.c;
+            change_percent = data.cp;
+            exchange = data.e;
+            trade_time = data.lt;
+            ticker_val = data.t;
+            // console.log(price, change, change_percent, exchange, trade_time);
+            // res.end(JSON.stringify(data));
+            console.log(price, change);
+            console.log(price, change);
+            if (change.charAt(0) == '+') {
+                color_val = green;
             } else {
-                var attachments_arr = [{
-                    text: "https://www.youtube.com/watch?v=OGp9P6QvMjY",
-                    color: red
-                }];
-                var json = JSON.stringify({
-                    response_type: "in_channel",
-                    text: "No such ticker.  See link for explanation.",
-                    attachments: attachments_arr
-                });
-                res.end(json);
+                color_val = red;
             }
 
-        });
+            var attachments_arr = [{
+                text: "$" + price + " " + change + " (" + change_percent + "%)",
+                color: color_val
+            }];
+            var ticker_link = "<https://www.google.com/finance?q=" + ticker_val + "|" + ticker_val + ">";
+            var json = JSON.stringify({
+                response_type: "in_channel",
+                text: ticker_link + " traded on " + exchange + " @ " + trade_time,
+                attachments: attachments_arr
+            });
+            res.end(json);
+        } else {
+            var attachments_arr = [{
+                text: "https://www.youtube.com/watch?v=OGp9P6QvMjY",
+                color: red
+            }];
+            var json = JSON.stringify({
+                response_type: "in_channel",
+                text: "No such ticker.  See link for explanation.",
+                attachments: attachments_arr
+            });
+            res.end(json);
+        }
+
+    });
 });
 
 app.post('/test', function (req, res) {
@@ -204,14 +203,3 @@ setInterval(function () {
         }
     }
 }, 1500000); // every 25 minutes
-
-
-// Response format
-// {
-//     "text": "It's 80 degrees right now.",
-//     "attachments": [
-//         {
-//             "text":"Partly cloudy today and tomorrow"
-//         }
-//     ]
-// }
