@@ -6,19 +6,15 @@ var moment = require('moment-timezone');
 var config = require('./config'); // get config file
 var request = require('request');
 var googleStocks = require('google-stocks');
+var app = express();
 
 var red = "#FF0000";
 var green = "#00FF00";
-
-moment.tz.setDefault('America/New_York');
-
-var morning = moment("08:30:00", 'HH:mm A');
-var night = moment("24:00:00", 'HH:mm A');
-
 var sloken = config.sloken;
 
-// Create a new instance of express
-var app = express();
+moment.tz.setDefault('America/New_York');
+var morning = moment("08:30:00", 'HH:mm A');
+var night = moment("24:00:00", 'HH:mm A');
 
 var port = process.env.PORT || 8080;
 
@@ -26,6 +22,16 @@ var port = process.env.PORT || 8080;
 app.use(bodyParser.urlencoded({
     extended: false
 }));
+
+app.all('*', function(req, res, next) {
+    try {
+        req = req.client._httpMessage.req;
+        console.log(moment().format() + '\n' + req.body);
+    } catch(e) {
+        console.log("TODO: determine request type");
+    }
+    next();
+});
 
 app.get('/', function (req, res) {
     var html = "Thank you for visiting us.  There is not much to see so please leave.";
@@ -35,7 +41,8 @@ app.get('/', function (req, res) {
 
 app.post('/google', function (req, res) {
     console.log("POST ::", moment().format());
-    var obj = req.client._httpMessage.req.body;
+    auth(req, res);
+    var obj = req.body;
     var token = obj.token;
     var text = obj.text;
     console.log(obj);
@@ -58,7 +65,8 @@ app.post('/google', function (req, res) {
 
 app.post('/youtube', function (req, res) {
     console.log("POST ::", moment().format());
-    var obj = req.client._httpMessage.req.body;
+    auth(req, res);
+    var obj = req.body;
     var text = obj.text;
     console.log(obj);
     var link = "https://www.youtube.com/results?search_query=" + encodeURIComponent(text);
@@ -80,7 +88,8 @@ app.post('/youtube', function (req, res) {
 
 app.post('/stackoverflow', function (req, res) {
     console.log("POST ::", moment().format());
-    var obj = req.client._httpMessage.req.body;
+    auth(req, res);
+    var obj = req.body;
     var text = obj.text;
     console.log(obj);
     var link = "https://stackoverflow.com/search?tab=votes&q=" + encodeURIComponent(text);
@@ -102,16 +111,9 @@ app.post('/stackoverflow', function (req, res) {
 
 app.post('/stock', function (req, res) {
     console.log("POST ::", moment().format());
-    var obj = req.client._httpMessage.req.body;
+    auth(req, res);
+    var obj = req.body;
     var ticker = obj.text;
-    // console.log(obj);
-    var price;
-    var change;
-    var change_percent;
-    var exchange;
-    var trade_time;
-    var color_val;
-    var ticker_val;
     res.writeHead(200, {
         "Content-Type": "application/json"
     });
@@ -167,7 +169,8 @@ app.post('/stock', function (req, res) {
 
 app.post('/test', function (req, res) {
     console.log("POST ::", moment().format());
-    var obj = req.client._httpMessage.req.body;
+    auth(req, res);
+    var obj = req.body;
     var text = obj.text;
     console.log(obj);
     var link = "https://www.youtube.com/watch?v=X-6V0Wg0aOI";
@@ -192,6 +195,15 @@ app.listen(port, function (err) {
     }
     console.log('Server started on port', port);
 });
+
+function auth(req, res) {
+    if (req.body.token != sloken) {
+        res.writeHead(403, {
+            "Content-Type": "text/plain"
+        });
+        res.end("Invalid request")
+    }
+}
 
 setInterval(function () {
     var now = moment();
