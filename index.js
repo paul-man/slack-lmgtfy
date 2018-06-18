@@ -118,54 +118,51 @@ app.post('/stock', function (req, res) {
         "Content-Type": "application/json"
     });
 
+    request.get(
+        { url: "https://api.iextrading.com/1.0/stock/market/batch?symbols="+ticker+"&types=quote" },
+        function (error, response, body) {
+            if (!error && response.statusCode == 200) {
+                body = body.replace(/\//g, "");
+                body = JSON.parse(body.ticker)[0];
+                console.log(body);
+                var price = body.latestPrice;
+                var change = body.change;
+                var change_percent = body.changePercent;
+                var exchange = body.primaryExchange;
+                var trade_time = body.latestTime;
+                if (change.charAt(0) == '+') {
+                    color_val = green;
+                } else {
+                    color_val = red;
+                }
 
-    googleStocks([ticker], function (error, data) {
-        if (!error && response.statusCode == 200) {
-            data = data.replace(/\//g, "");
-            data = JSON.parse(data)[0];
-            console.log(data);
-            price = data.l;
-            change = data.c;
-            change_percent = data.cp;
-            exchange = data.e;
-            trade_time = data.lt;
-            ticker_val = data.t;
-            // console.log(price, change, change_percent, exchange, trade_time);
-            // res.end(JSON.stringify(data));
-            console.log(price, change);
-            console.log(price, change);
-            if (change.charAt(0) == '+') {
-                color_val = green;
+                var attachments_arr = [{
+                    text: "$" + price + " " + change + " (" + change_percent + "%)",
+                    color: color_val
+                }];
+                var ticker_link = "<https://www.google.com/finance?q=" + ticker + ">";
+                var json = JSON.stringify({
+                    response_type: "in_channel",
+                    text: ticker_link + " traded on " + exchange + " @ " + trade_time,
+                    attachments: attachments_arr
+                });
+                res.end(json);
             } else {
-                color_val = red;
+                var attachments_arr = [{
+                    text: "https://www.youtube.com/watch?v=OGp9P6QvMjY",
+                    color: red
+                }];
+                var json = JSON.stringify({
+                    response_type: "in_channel",
+                    text: "No such ticker.  See link for explanation.",
+                    attachments: attachments_arr
+                });
+                res.end(json);
             }
-
-            var attachments_arr = [{
-                text: "$" + price + " " + change + " (" + change_percent + "%)",
-                color: color_val
-            }];
-            var ticker_link = "<https://www.google.com/finance?q=" + ticker_val + "|" + ticker_val + ">";
-            var json = JSON.stringify({
-                response_type: "in_channel",
-                text: ticker_link + " traded on " + exchange + " @ " + trade_time,
-                attachments: attachments_arr
-            });
-            res.end(json);
-        } else {
-            var attachments_arr = [{
-                text: "https://www.youtube.com/watch?v=OGp9P6QvMjY",
-                color: red
-            }];
-            var json = JSON.stringify({
-                response_type: "in_channel",
-                text: "No such ticker.  See link for explanation.",
-                attachments: attachments_arr
-            });
-            res.end(json);
         }
-
-    });
+    );
 });
+
 
 app.post('/test', function (req, res) {
     console.log("POST ::", moment().format());
